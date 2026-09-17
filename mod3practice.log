@@ -1,0 +1,4 @@
+mysql> SELECT ShopID, Count(DrinkID) AS NumberOfDrinks FROM Drink GROUP BY ShopID
+    -> 
+    -> 
+    -> ^C

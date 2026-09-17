@@ -1,0 +1,61 @@
+mysql> SELECT ShopID, COUNT(*) AS NumberOfDrinks FROM Drink GROUP BY ShopID;
++--------+----------------+
+| ShopID | NumberOfDrinks |
++--------+----------------+
+|      1 |              2 |
+|      2 |              2 |
+|      3 |              2 |
++--------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT ROUND(AVG(Price), 2) AS AveragePrice FROM Drink;
++--------------+
+| AveragePrice |
++--------------+
+|         3.67 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(Quantity) AS LargeOrders FROM Purchase WHERE Quantity > 5;
++-------------+
+| LargeOrders |
++-------------+
+|           7 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT Neighborhood, COUNT(ShopID) as NumberOfShops FROM  Shop GROUP BY Neighborhood;
++--------------+---------------+
+| Neighborhood | NumberOfShops |
++--------------+---------------+
+| Uptown       |             1 |
+| Dinkytown    |             1 |
+| Grand Avenue |             1 |
++--------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> "All of the neighborhoods have one shop each";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"All of the neighborhoods have one shop each"' at line 1
+mysql> SELECT DrinkID, SUM(Quantity) FROM Purchase GROUP BY DrinkID;
++---------+---------------+
+| DrinkID | SUM(Quantity) |
++---------+---------------+
+|       1 |            20 |
+|       2 |            15 |
+|       3 |            10 |
+|       4 |            20 |
+|       5 |            14 |
+|       6 |            14 |
++---------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT PurchaseDate, SUM(Quantity) AS TotalQuantity FROM Purchase GROUP BY PurchaseDate ORDER BY TotalQuantity DESC;
++--------------+---------------+
+| PurchaseDate | TotalQuantity |
++--------------+---------------+
+| 2026-06-02   |            51 |
+| 2026-06-01   |            42 |
++--------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> notee;
