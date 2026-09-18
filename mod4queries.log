@@ -1,0 +1,164 @@
+
+source Module4_setup.sql;
+mysql> source Module4_setup.sql;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Database changed
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.04 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+Query OK, 6 rows affected (0.00 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+Query OK, 2 rows affected (0.02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> USE retro_replay;
+Database changed
+mysql> SHOW TABLES;
++------------------------+
+| Tables_in_retro_replay |
++------------------------+
+| Console                |
+| Game                   |
+| TradeIn                |
++------------------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Game (Title, Genre, Price, ConsoleID)
+    -> VALUES ('Mega Man X', 'Platformer', 35.00, 1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM Game;
++--------+--------------------+------------+-------+-----------+
+| GameID | Title              | Genre      | Price | ConsoleID |
++--------+--------------------+------------+-------+-----------+
+|      1 | Chrono Trigger     | RPG        | 45.00 |         1 |
+|      2 | Super Metroid      | Platformer | 40.00 |         1 |
+|      3 | Duck Hunt          | Shooter    | 12.00 |         1 |
+|      4 | Street Fighter II  | Fighting   | 30.00 |         1 |
+|      5 | Sonic the Hedgehog | Platformer | 20.00 |         2 |
+|      6 | Final Fantasy VII  | RPG        | 50.00 |         3 |
+|      7 | Mega Man X         | Platformer | 35.00 |         1 |
++--------+--------------------+------------+-------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> UPDATE Game
+    -> SET Price = Price - 5.00
+    -> WHERE Title = 'Chrono Trigger';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM Game WHERE Title = 'Chrono Trigger';
++--------+----------------+-------+-------+-----------+
+| GameID | Title          | Genre | Price | ConsoleID |
++--------+----------------+-------+-------+-----------+
+|      1 | Chrono Trigger | RPG   | 40.00 |         1 |
++--------+----------------+-------+-------+-----------+
+1 row in set (0.00 sec)
+
+mysql> DELETE FROM Game
+    -> WHERE Title = 'Chrono Trigger';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`retro_replay`.`TradeIn`, CONSTRAINT `TradeIn_ibfk_1` FOREIGN KEY (`GameID`) REFERENCES `Game` (`GameID`))
+mysql> SELECT * FROM Game WHERE Title = 'Chrono Trigger';
++--------+----------------+-------+-------+-----------+
+| GameID | Title          | Genre | Price | ConsoleID |
++--------+----------------+-------+-------+-----------+
+|      1 | Chrono Trigger | RPG   | 40.00 |         1 |
++--------+----------------+-------+-------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM Game WHERE Title = 'Duck Hunt';
++--------+-----------+---------+-------+-----------+
+| GameID | Title     | Genre   | Price | ConsoleID |
++--------+-----------+---------+-------+-----------+
+|      3 | Duck Hunt | Shooter | 12.00 |         1 |
++--------+-----------+---------+-------+-----------+
+1 row in set (0.00 sec)
+
+mysql> DELETE FROM Game
+    -> WHERE Title = 'Duck Hunt';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Game;
++--------+--------------------+------------+-------+-----------+
+| GameID | Title              | Genre      | Price | ConsoleID |
++--------+--------------------+------------+-------+-----------+
+|      1 | Chrono Trigger     | RPG        | 40.00 |         1 |
+|      2 | Super Metroid      | Platformer | 40.00 |         1 |
+|      4 | Street Fighter II  | Fighting   | 30.00 |         1 |
+|      5 | Sonic the Hedgehog | Platformer | 20.00 |         2 |
+|      6 | Final Fantasy VII  | RPG        | 50.00 |         3 |
+|      7 | Mega Man X         | Platformer | 35.00 |         1 |
++--------+--------------------+------------+-------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO Console (ConsoleName, Manufacturer, ReleaseYear) VALUES ('Nintendo 64', 'Nintendo', 1996), ('Sega Dreamcast', 'Sega', 1999 );
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE TradeIn SET CreditAmount = CreditAmount + 2 WHERE CustomerName = 'Maya Chen'
+    -> ;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select CreditAmount FROM TradeIn WHERE CustomerName = 'Maya Chen'
+    -> ;
++--------------+
+| CreditAmount |
++--------------+
+|        17.00 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> INSTERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES ('Test', '2026-08-01', 8.00)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INSTERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES ('' at line 1
+mysql> INSTERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES (5, 'Test', '2026-08-01', 8.00)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INSTERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES (5' at line 1
+mysql> INSTERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES (5, 'Test', '2026-08-01', 8.00);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INSTERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES (5' at line 1
+mysql> INSERT INTO TradeIn (GameID, CustomerName, TradeInDate, CreditAmount) VALUES (5, 'Test', '2026-09-01', 8.00);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM TradeIn
+    -> ;
++-----------+--------+--------------+-------------+--------------+
+| TradeInID | GameID | CustomerName | TradeInDate | CreditAmount |
++-----------+--------+--------------+-------------+--------------+
+|         1 |      1 | Maya Chen    | 2026-08-01  |        17.00 |
+|         2 |      4 | Devon Brooks | 2026-08-03  |        10.00 |
+|         3 |      5 | Test         | 2026-09-01  |         8.00 |
++-----------+--------+--------------+-------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> DELETE FROM TradeIn WHERE TradeInID = 3
+    -> ;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM TradeIn
+    -> ;
++-----------+--------+--------------+-------------+--------------+
+| TradeInID | GameID | CustomerName | TradeInDate | CreditAmount |
++-----------+--------+--------------+-------------+--------------+
+|         1 |      1 | Maya Chen    | 2026-08-01  |        17.00 |
+|         2 |      4 | Devon Brooks | 2026-08-03  |        10.00 |
++-----------+--------+--------------+-------------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> notee
