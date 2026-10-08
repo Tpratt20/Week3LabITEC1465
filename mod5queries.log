@@ -1,0 +1,216 @@
+mysql> source Module5_setup.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 1 row affected (0.00 sec)
+
+Database changed
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+Query OK, 0 rows affected (0.02 sec)
+
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM RequestsFlat;
++-----------+--------------+---------------+--------------+---------------+------------+-------------+
+| RequestID | ListenerName | ListenerPhone | Song1Title   | Song1Artist   | Song2Title | Song2Artist |
++-----------+--------------+---------------+--------------+---------------+------------+-------------+
+|         1 | Priya Shah   | 555-0201      | Landslide    | Fleetwood Mac | Africa     | Toto        |
+|         2 | Sam Okafor   | 555-0202      | Superstition | Stevie Wonder | NULL       | NULL        |
+|         3 | Priya Shah   | 555-0201      | Sweet Dreams | Eurythmics    | Take On Me | a-ha        |
++-----------+--------------+---------------+--------------+---------------+------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Requests1NF;
++-----------+--------------+---------------+--------------+---------------+
+| RequestID | ListenerName | ListenerPhone | SongTitle    | SongArtist    |
++-----------+--------------+---------------+--------------+---------------+
+|         1 | Priya Shah   | 555-0201      | Landslide    | Fleetwood Mac |
+|         1 | Priya Shah   | 555-0201      | Africa       | Toto          |
+|         2 | Sam Okafor   | 555-0202      | Superstition | Stevie Wonder |
+|         3 | Priya Shah   | 555-0201      | Sweet Dreams | Eurythmics    |
+|         3 | Priya Shah   | 555-0201      | Take On Me   | a-ha          |
++-----------+--------------+---------------+--------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Requests2NF
+    -> ;
++-----------+--------------+---------------+
+| RequestID | ListenerName | ListenerPhone |
++-----------+--------------+---------------+
+|         1 | Priya Shah   | 555-0201      |
+|         2 | Sam Okafor   | 555-0202      |
+|         3 | Priya Shah   | 555-0201      |
++-----------+--------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM RequestSong2NF;
+ERROR 1146 (42S02): Table 'wkrc.RequestSong2NF' doesn't exist
+mysql> SELECT * FROM RequestSongs2NF;
++---------------+-----------+--------------+---------------+
+| RequestSongID | RequestID | SongTitle    | SongArtist    |
++---------------+-----------+--------------+---------------+
+|             1 |         1 | Landslide    | Fleetwood Mac |
+|             2 |         1 | Africa       | Toto          |
+|             3 |         2 | Superstition | Stevie Wonder |
+|             4 |         3 | Sweet Dreams | Eurythmics    |
+|             5 |         3 | Take On Me   | a-ha          |
++---------------+-----------+--------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Listeners3NF (
+    -> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    -> ListenerName VARCHAR2(100),
+    -> Listen
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VARCHAR2(100),
+Listen' at line 3
+mysql> CREATE TABLE Listeners3NF (
+    ->     -> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    -> 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> ListenerID INT AUTO_INCREMENT PRIMARY KEY,' at line 2
+mysql> CREATE TABLE Listeners3NF (
+    ->     -> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> ListenerID INT AUTO_INCREMENT PRIMARY KEY,' at line 2
+mysql> CREATE TABLE Listeners3NF (
+    -> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    -> ListenerName VARCHAR(100),
+    -> ListenerPhone VARCHAR(20));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT * FROM Listeners3NF
+    -> ;
+Empty set (0.00 sec)
+
+mysql> CREATE TABLE Requests3NF (
+    -> RequestID INT PRIMARY KEY,
+    -> ListenerID INT PRIMARY KEY,
+    -> ListenerID INT,
+    -> FOREIGN KEY (ListenerID) REFERENCE Listeners3nf(ListenerID)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'REFERENCE Listeners3nf(ListenerID)' at line 5
+mysql> CREATE TABLE Requests3NF ( RequestID INT PRIMARY KEY, ListenerID INT PRIMARY KEY, ListenerID INT, FOREIGN KEY (ListenerID) REFERENCES Listeners3nf(ListenerID);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> CREATE TABLE Listeners3NF (
+    ->     -> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    ->     -> ListenerName VARCHAR(100),
+    ->     -> ListenerPhone VARCHAR(20)
+    ->     -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    -> ListenerName VARCHAR(100),
+' at line 2
+mysql> CREATE TABLE Listeners3NF (
+    -> ListenerID INT AUTO_INCREMENT PRIMARY KEY,
+    -> ListenerName VARCHAR(100),
+    -> ListenerPhone VARCHAR(20)
+    -> );
+ERROR 1050 (42S01): Table 'Listeners3NF' already exists
+mysql> CREATE TABLE Requests3NF (
+    -> RequestID INT PRIMARY KEY,
+    -> ListenerID INT,
+    -> FOREIGN KEY (ListenerID) REFERENCES Listeners3NF(ListenerID)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE RequestSongs3NF (
+    -> RequestSongID INT AUTO_INCREMENT PRIMARY KEY,
+    -> RequestID INT,
+    -> SongTitle VARCHAR(150),
+    -> SongArtist VARCHAR(100),
+    -> FOREIGN KEY (RequestID) REFERENCES Requests3NF(RequestID)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> SELECT * FROM Requests3NF
+    -> ;
+Empty set (0.00 sec)
+
+mysql> SELECT * FROM RequestsSongs2NF;
+ERROR 1146 (42S02): Table 'wkrc.RequestsSongs2NF' doesn't exist
+mysql> INSERT INTO Listeners3NF (ListenerName, ListenerPhone)
+    -> VALUES ('Priya Shah', '555-0201'),
+    -> ('Sam Okafor', '555-0202');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Requests3NF VALUES
+    -> (1, 1),
+    -> (2, 2),
+    -> (3, 1);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO RequestSongs3NF (RequestID, SongTitle, SongArtist) Values
+    -> (1, 'Landslide', 'Fleetwood Mac'),
+    -> (1, 'Africa', 'Toto'),
+    -> (2, 'Superstition', 'Stevie Wonder'),
+    -> (3, 'Sweet Dreams', 'Eurythmics'),
+    -> (3, 'Take On Me', 'a-ha');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT Listeners3NF.ListenerName, Requests3NF.RequestID
+    -> FROM Requests3NF
+    -> INNER JOIN Listeners3NF ON Requests3NF.ListenerID = Listeners3NF.ListenerID;
++--------------+-----------+
+| ListenerName | RequestID |
++--------------+-----------+
+| Priya Shah   |         1 |
+| Priya Shah   |         3 |
+| Sam Okafor   |         2 |
++--------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Listeners3NF (ListenerName, ListenerPhone) VALUES ('Alex Torres', '555-0203');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT Listeners3NF.ListenerName, Requests3NF.RequestID
+    -> FROM Listeners3NF
+    -> LEFT JOIN Requests3NF ON Listeners3NF.ListenerID = Requests3NF.ListenerID;
++--------------+-----------+
+| ListenerName | RequestID |
++--------------+-----------+
+| Priya Shah   |         1 |
+| Priya Shah   |         3 |
+| Sam Okafor   |         2 |
+| Alex Torres  |      NULL |
++--------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT Listeners3NF.ListenerName, Requests3NF.RequestID
+    -> FROM Requests3NF
+    -> RIGHT JOIN Listeners3NF ON Requests3NF.ListenerID = Listeners3NF.ListenerID;
++--------------+-----------+
+| ListenerName | RequestID |
++--------------+-----------+
+| Priya Shah   |         1 |
+| Priya Shah   |         3 |
+| Sam Okafor   |         2 |
+| Alex Torres  |      NULL |
++--------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> notee;

@@ -1,0 +1,116 @@
+mysql> DROP TABLE IF EXISTS ShowsFlat;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> 
+mysql> CREATE TABLE ShowsFlat (
+    -> ScheduleID INT PRIMARY KEY,
+    -> HostName VARCHAR(100),
+    -> HostEmail VARCHAR(100),
+    -> Show1Title VARCHAR(150),
+    -> Show1TimeSlot VARCHAR(50),
+    -> Show2Title VARCHAR(150),
+    -> Show2TimeSlot VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO ShowsFlat VALUES
+    -> (1, 'Jordan Betancourt', 'jordan.b@example.com', 'Morning Mix', 'Mon 7am', 'Vinyl Vault', 'Wed 9pm'),
+    -> (2, 'Riley Nakamura', 'riley.n@example.com', 'Indie Hour', 'Tue 6pm', NULL, NULL),
+    -> (3, 'Jordan Betancourt', 'jordan.b@example.com', 'Sunday Jazz', 'Sun 10am', 'Late Night Blues', 'Fri 11pm');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> "Hosts have repeating name and email data. Also, Hosts should be a seperate table to avoid the null values if a host has no second show."
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"Data is not atomic, time slot should be divided into different columns. Also, H' at line 1
+mysql> CREATE TABLE Shows1NF (
+    ->     ScheduleID INT,
+    ->     HostName VARCHAR(100),
+    ->     HostEmail VARCHAR(100),
+    ->     ShowTitle VARCHAR(150),
+    ->     TimeSlot VARCHAR(50),
+    ->     PRIMARY KEY (ScheduleID, ShowTitle)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE Hosts2NF (
+    ->     ScheduleID INT PRIMARY KEY,
+    ->     HostName VARCHAR(100),
+    ->     HostEmail VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE ShowAssignments2NF (
+    ->     ScheduleID INT,
+    ->     ShowTitle VARCHAR(150),
+    ->     TimeSlot VARCHAR(50),
+    ->     PRIMARY KEY (ScheduleID, ShowTitle),
+    ->     FOREIGN KEY (ScheduleID) REFERENCES Hosts2NF(ScheduleID)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO Shows1NF VALUES
+    -> (1, 'Jordan Betancourt', 'jordan.b@example.com', 'Morning Mix', 'Mon 7am'),
+    -> (1, 'Jordan Betancourt', 'jordan.b@example.com', 'Vinyl Vault', 'Wed 9pm'),
+    -> (2, 'Riley Nakamura', 'riley.n@example.com', 'Indie Hour', 'Tue 6pm'),
+    -> (3, 'Jordan Betancourt', 'jordan.b@example.com', 'Sunday Jazz', 'Sun 10am'),
+    -> (3, 'Jordan Betancourt', 'jordan.b@example.com', 'Late Night Blues', 'Fri 11pm')
+    -> ;
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Hosts2NF VALUES
+    -> (1, 'Jordan Betancourt', 'jordan.b@example.com'),
+    -> (2, 'Riley Nakamura', 'riley.n@example.com'),
+    -> (3, 'Jordan Betancourt', 'jordan.b@example.com');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO ShowAssignments2NF VALUES
+    -> (1, 'Morning Mix', 'Mon 7am'),
+    -> (1, 'Vinyl Vault', 'Wed 9pm'),
+    -> (2, 'Indie Hour', 'Tue 6pm'),
+    -> (3, 'Sunday Jazz', 'Sun 10am'),
+    -> (3, 'Late Night Blues', 'Fri 11pm')
+    -> ;
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Shows1NF;
++------------+-------------------+----------------------+------------------+----------+
+| ScheduleID | HostName          | HostEmail            | ShowTitle        | TimeSlot |
++------------+-------------------+----------------------+------------------+----------+
+|          1 | Jordan Betancourt | jordan.b@example.com | Morning Mix      | Mon 7am  |
+|          1 | Jordan Betancourt | jordan.b@example.com | Vinyl Vault      | Wed 9pm  |
+|          2 | Riley Nakamura    | riley.n@example.com  | Indie Hour       | Tue 6pm  |
+|          3 | Jordan Betancourt | jordan.b@example.com | Late Night Blues | Fri 11pm |
+|          3 | Jordan Betancourt | jordan.b@example.com | Sunday Jazz      | Sun 10am |
++------------+-------------------+----------------------+------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM HostsNF
+    -> ;
+ERROR 1146 (42S02): Table 'wkrc.HostsNF' doesn't exist
+mysql> SELECT * FROM Hosts2NF;
++------------+-------------------+----------------------+
+| ScheduleID | HostName          | HostEmail            |
++------------+-------------------+----------------------+
+|          1 | Jordan Betancourt | jordan.b@example.com |
+|          2 | Riley Nakamura    | riley.n@example.com  |
+|          3 | Jordan Betancourt | jordan.b@example.com |
++------------+-------------------+----------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM ShowAssignments2NF;
++------------+------------------+----------+
+| ScheduleID | ShowTitle        | TimeSlot |
++------------+------------------+----------+
+|          1 | Morning Mix      | Mon 7am  |
+|          1 | Vinyl Vault      | Wed 9pm  |
+|          2 | Indie Hour       | Tue 6pm  |
+|          3 | Late Night Blues | Fri 11pm |
+|          3 | Sunday Jazz      | Sun 10am |
++------------+------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> notee;

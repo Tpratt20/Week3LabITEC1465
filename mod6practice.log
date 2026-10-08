@@ -1,0 +1,257 @@
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE FUNCTION MemberYearsActive(JoinDate DATE)
+    -> RETURNS INT
+    -> NOT DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE Years INT;
+    ->     SET Years = TIMESTAMPDIFF(YEAR, JoinDate, CURDATE());
+    ->     RETURN Years;
+    -> END $$
+ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+mysql> 
+mysql> DELIMITER ;
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE FUNCTION MemberYearsActive(JoinDate DATE)
+    -> RETURNS INT
+    -> NOT DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     DECLARE Years INT;
+    ->     SET Years = TIMESTAMPDIFF(YEAR, JoinDate, CURDATE());
+    ->     RETURN Years;
+    -> END $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> SELECT FirstName, LastName, MemberYearsActive(JoinDate) from Member;
++-----------+----------+-----------------------------+
+| FirstName | LastName | MemberYearsActive(JoinDate) |
++-----------+----------+-----------------------------+
+| Kayla     | Ortiz    |                           3 |
+| Dana      | Petrov   |                           2 |
+| Miguel    | Alvarez  |                           1 |
++-----------+----------+-----------------------------+
+3 rows in set (0.00 sec)
+
+mysql> 'Kayla Ortiz has been a member for the longest'
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Kayla Ortiz has been a member for the longest'' at line 1
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE FUNCTION ClassDiscount(Tier VARCHAR(20))
+    -> RETURNS DECIMAL(3,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->     DECLARE discount DECIMAL(3,2);
+    -> 
+    ->     IF Tier = 'Gold' THEN
+    ->         SET discount = 0.20;
+    ->     ELSEIF Tier = 'Silver' THEN
+    ->         SET discount = 0.10;
+    ->     ELSE
+    ->         SET discount = 0.00;
+    ->     END IF;
+    -> 
+    ->     RETURN discount;
+    -> END $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> select FirstName, LastName, ClassDiscount(MemberTier(ClassesAttended) from Member;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Member' at line 1
+mysql> CREATE FUNCTION MemberTier(Attended INT)
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> BEGIN
+    -> DECLARE Tier VARCHAR(10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+mysql> IF Attended >= 30 THEN
+    -> SET Tier = 'Gold';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF Attended >= 30 THEN
+SET Tier = 'Gold'' at line 1
+mysql> ELSEIF Attended >= 10 THEN
+    -> SET Tier = 'Silver';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSEIF Attended >= 10 THEN
+SET Tier = 'Silver'' at line 1
+mysql> ELSE
+    -> SET Tier = 'Bronze';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSE
+SET Tier = 'Bronze'' at line 1
+mysql> END IF;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END IF' at line 1
+mysql> RETURN Tier;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'RETURN Tier' at line 1
+mysql> END $$CREATE FUNCTION MemberTier(Attended INT)
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> BEGIN
+    -> DECLARE Tier VARCHAR(10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END $$CREATE FUNCTION MemberTier(Attended INT)
+RETURNS VARCHAR(10)
+DETERMINISTIC' at line 1
+mysql> IF Attended >= 30 THEN
+    -> SET Tier = 'Gold';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF Attended >= 30 THEN
+SET Tier = 'Gold'' at line 1
+mysql> ELSEIF Attended >= 10 THEN
+    -> SET Tier = 'Silver';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSEIF Attended >= 10 THEN
+SET Tier = 'Silver'' at line 1
+mysql> ELSE
+    -> SET Tier = 'Bronze';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSE
+SET Tier = 'Bronze'' at line 1
+mysql> END IF;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END IF' at line 1
+mysql> RETURN Tier;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'RETURN Tier' at line 1
+mysql> END $$DELIMITER $$
+    -> CREATE FUNCTION MemberTier(Attended INT)
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> BEGIN
+    -> DECLARE Tier VARCHAR(10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END $$DELIMITER $$
+CREATE FUNCTION MemberTier(Attended INT)
+RETURNS VARCHAR(10)
+' at line 1
+mysql> IF Attended >= 30 THEN
+    -> SET Tier = 'Gold';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF Attended >= 30 THEN
+SET Tier = 'Gold'' at line 1
+mysql> ELSEIF Attended >= 10 THEN
+    -> SET Tier = 'Silver';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSEIF Attended >= 10 THEN
+SET Tier = 'Silver'' at line 1
+mysql> ELSE
+    -> SET Tier = 'Bronze';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSE
+SET Tier = 'Bronze'' at line 1
+mysql> END IF;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END IF' at line 1
+mysql> RETURN Tier;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'RETURN Tier' at line 1
+mysql> END $$DELIMITER $$
+    -> CREATE FUNCTION MemberTier(Attended INT)
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> BEGIN
+    -> DECLARE Tier VARCHAR(10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END $$DELIMITER $$
+CREATE FUNCTION MemberTier(Attended INT)
+RETURNS VARCHAR(10)
+' at line 1
+mysql> IF Attended >= 30 THEN
+    -> SET Tier = 'Gold';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF Attended >= 30 THEN
+SET Tier = 'Gold'' at line 1
+mysql> ELSEIF Attended >= 10 THEN
+    -> SET Tier = 'Silver';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSEIF Attended >= 10 THEN
+SET Tier = 'Silver'' at line 1
+mysql> ELSE
+    -> SET Tier = 'Bronze';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ELSE
+SET Tier = 'Bronze'' at line 1
+mysql> END IF;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'END IF' at line 1
+mysql> RETURN Tier;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'RETURN Tier' at line 1
+mysql> DELIMITER $$
+mysql> CREATE FUNCTION MemberTier(Attended INT)
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> BEGIN
+    -> DECLARE Tier VARCHAR(10);
+    -> IF Attended >= 30 THEN
+    -> SET Tier = 'Gold';
+    -> ELSEIF Attended >= 10 THEN
+    -> SET Tier = 'Silver';
+    -> ELSE
+    -> SET Tier = 'Bronze';
+    -> END IF;
+    -> RETURN Tier;
+    -> END $$
+ERROR 1304 (42000): FUNCTION MemberTier already exists
+mysql> select FirstName, LastName, ClassDiscount(MemberTier(ClassesAttended) from Member;
+    -> ;
+    -> Delimiter ;
+    -> select FirstName, LastName, ClassDiscount(MemberTier(ClassesAttended) from Member;
+    -> $$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from Member;
+;
+Delimiter ;select FirstName, LastName, ClassDiscount(MemberTier(C' at line 1
+mysql> select FirstName, LastName, ClassDiscount(MemberTier(ClassesAttended)) from Member;
+    -> ;
+    -> $$
++-----------+----------+--------------------------------------------+
+| FirstName | LastName | ClassDiscount(MemberTier(ClassesAttended)) |
++-----------+----------+--------------------------------------------+
+| Kayla     | Ortiz    |                                       0.20 |
+| Dana      | Petrov   |                                       0.00 |
+| Miguel    | Alvarez  |                                       0.00 |
++-----------+----------+--------------------------------------------+
+3 rows in set (0.00 sec)
+
+mysql> DELIMITER ;
+mysql> SELECT * FROM Member;
++----------+-----------+----------+------------+-----------------+
+| MemberID | FirstName | LastName | JoinDate   | ClassesAttended |
++----------+-----------+----------+------------+-----------------+
+|        1 | Kayla     | Ortiz    | 2023-01-15 |              33 |
+|        2 | Dana      | Petrov   | 2024-06-01 |               9 |
+|        3 | Miguel    | Alvarez  | 2025-03-10 |               3 |
++----------+-----------+----------+------------+-----------------+
+3 rows in set (0.01 sec)
+
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE PROCEDURE AddNewMember(
+    ->     IN pFirstName VARCHAR(50),
+    ->     IN pLastName VARCHAR(50),
+    ->     IN pJoinDate DATE
+    -> )
+    -> BEGIN
+    ->     INSERT INTO Member (FirstName, LastName, JoinDate, ClassesAttended)
+    ->     VALUES (pFirstName, pLastName, pJoinDate, 0);
+    -> 
+    ->     SELECT *
+    ->     FROM Member
+    ->     WHERE MemberID = LAST_INSERT_ID();
+    -> END $$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL AddNewMember('Tyler', 'Pratt', 10/8/2026)
+    -> ;
+ERROR 1292 (22007): Incorrect date value: '0.000616979269496544' for column 'pJoinDate' at row 1
+mysql> CALL AddNewMember('Tyler', 'Pratt', '2026-10-08');
++----------+-----------+----------+------------+-----------------+
+| MemberID | FirstName | LastName | JoinDate   | ClassesAttended |
++----------+-----------+----------+------------+-----------------+
+|        4 | Tyler     | Pratt    | 2026-10-08 |               0 |
++----------+-----------+----------+------------+-----------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT FirstName, LastName, MemberTier(ClassesAttended) FROM Member;
++-----------+----------+-----------------------------+
+| FirstName | LastName | MemberTier(ClassesAttended) |
++-----------+----------+-----------------------------+
+| Kayla     | Ortiz    | Gold                        |
+| Dana      | Petrov   | Bronze                      |
+| Miguel    | Alvarez  | Bronze                      |
+| Tyler     | Pratt    | Bronze                      |
++-----------+----------+-----------------------------+
+4 rows in set (0.00 sec)
+
+mysql> 'MyMember Tier is Bronze';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''MyMember Tier is Bronze'' at line 1
+mysql> notee;
