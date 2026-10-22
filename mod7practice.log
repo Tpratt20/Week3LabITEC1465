@@ -1,0 +1,71 @@
+mysql> CREATE USER 'escalation_manager'@'localhost'
+    -> IDENTIFIED BY 'ITEC1465database'
+    -> ;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant select, insert, update, delete on foghorn.* to 'escalation_manager'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show grants for 'escalation_manager'@'localhost';
++-----------------------------------------------------------------------------------------+
+| Grants for escalation_manager@localhost                                                 |
++-----------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `escalation_manager`@`localhost`                                  |
+| GRANT SELECT, INSERT, UPDATE, DELETE ON `foghorn`.* TO `escalation_manager`@`localhost` |
++-----------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> 'The escalation_manager account now has select, insert, update, and delete privileges'
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''The escalation_manager account now has select, insert, update, and delete privi' at line 1
+mysql> create user 'billing_auditor'@'localhost' identified by 'ITEC1465database';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant select on foghorn.* to 'billing_auditor'@'localhost';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show grants for 'billing_auditor'@localhost';
+    '> ;
+    '> SHOW GRANTS FOR 'billing_auditor'@'localhost';
+    '> GRANT SELECT
+    '> ON foghorn.*
+    '> TO 'billing_auditor'@'localhost';
+    '> '
+    -> ^C
+mysql> SHOW GRANTS FOR 'billing_auditor'@'localhost';
++--------------------------------------------------------------+
+| Grants for billing_auditor@localhost                         |
++--------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `billing_auditor`@`localhost`          |
+| GRANT SELECT ON `foghorn`.* TO `billing_auditor`@`localhost` |
++--------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> REVOKE INSERT
+    -> ON foghorn.*
+    -> FROM 'support_agent'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW GRANTS FOR 'support_agent'@'localhost';
++--------------------------------------------------------------------+
+| Grants for support_agent@localhost                                 |
++--------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `support_agent`@`localhost`                  |
+| GRANT SELECT, UPDATE ON `foghorn`.* TO `support_agent`@`localhost` |
++--------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> DROP USER 'escalation_manager'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW GRANTS FOR 'escalation_manager'@'localhost';
+ERROR 1141 (42000): There is no such grant defined for user 'escalation_manager' on host 'localhost'
+mysql> DROP USER 'billing_auditor'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW GRANTS FOR 'billing_auditor'@'localhost';
+ERROR 1141 (42000): There is no such grant defined for user 'billing_auditor' on host 'localhost'
+mysql> The two accounts should not have the same privileges because we should follow the principle of least privilege. The escalation manager needs privileges to interact with the data in many ways including adding, changing, and deleting data. The billing auditor only needs to view data to do their audits, so by this principle they should only be granted select privileges.
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'The two accounts should not have the same privileges because we should follow th' at line 1
+mysql> notee;
