@@ -1,0 +1,20 @@
+mysql> INSERT INTO Book (Title, Author, YearPublished, Price)
+    -> VALUES
+    -> ('The Left Hand of Darkness', 'Ursula K. Le Guin', 1969, 12.99),
+    -> ('Foundation', 'Isaac Asimov', 1951, 10.99);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Book;
++--------+---------------------------+-------------------+---------------+-------+
+| BookID | Title                     | Author            | YearPublished | Price |
++--------+---------------------------+-------------------+---------------+-------+
+|      1 | Dune                      | Frank Herbert     |          1965 | 12.99 |
+|      2 | I, Robot                  | Isaac Asimov      |          1950 | 10.99 |
+|      3 | Neuromancer               | William Gibson    |          1984 | 11.99 |
+|      4 | The Left Hand of Darkness | Ursula K. Le Guin |          1969 | 12.99 |
+|      5 | Foundation                | Isaac Asimov      |          1951 | 10.99 |
++--------+---------------------------+-------------------+---------------+-------+
+5 rows in set (0.01 sec)
+
+mysql> exit
